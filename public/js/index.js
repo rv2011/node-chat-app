@@ -6,7 +6,7 @@ socket.on('connect', function() {
   //   text: 'hey, this is mike'
   // });
   socket.on('newMessage',function(message) {console.log(message)});
-  socket.emit('createMessage',{from:'Raghav',text:'Hey  Guys!'});
+  // socket.emit('createMessage',{from:'Raghav',text:'Hey  Guys!'});
 
 });
 socket.on('disconnect', function() {
