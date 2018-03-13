@@ -9,7 +9,6 @@ socket.on('connect', function() {
       from: message.from,
       createdAt: formattedTime
     });
-.text(`${message.from} ${formattedTime}: ${message.text}`);
     jQuery('#messages').append(html);
   });
 });
