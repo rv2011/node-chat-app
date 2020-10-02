@@ -1,15 +1,22 @@
-var socket = io();
+const socketIO = require('socket.io');
+const http = require('http');
+const express = require('express');
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
+const socket = io();
+
 function scrollToBottom () {
   //selectors
-  var messages = jQuery('#messages')
-  var newMessage = messages.children('li').last();
-  // var newMessage = messages.children('li:last-child'); not returning message
+  const messages = jQuery('#messages')
+  const newMessage = messages.children('li').last();
+  // const newMessage = messages.children('li:last-child'); not returning message
   //heights
-  var clientHeight = messages.prop('clientHeight');
-  var scrollTop = messages.prop('scrollTop');
-  var scrollHeight = messages.prop('scrollHeight');
-  var newMessageHeight = newMessage.innerHeight();
-  //var lastMessageHeight = newMessage.prev().innerHeight(); // 0
+  const clientHeight = messages.prop('clientHeight');
+  const scrollTop = messages.prop('scrollTop');
+  const scrollHeight = messages.prop('scrollHeight');
+  const newMessageHeight = newMessage.innerHeight();
+  //const lastMessageHeight = newMessage.prev().innerHeight(); // 0
 
   if(clientHeight+scrollTop+newMessageHeight >= scrollHeight) {
     messages.scrollTop(scrollHeight);
@@ -17,7 +24,7 @@ function scrollToBottom () {
 }
 socket.on('connect', function() {
   console.log('Connected to Server.');
-  var params = jQuery.deparam(window.location.search);
+  const params = jQuery.deparam(window.location.search);
 
   socket.emit('join', params, function(err) {
     if(err){
@@ -33,7 +40,7 @@ socket.on('disconnect', function() {
 });
 
 socket.on('updateUserList', function(users) {
-  var ol = jQuery('<ol></ol>');
+  const ol = jQuery('<ol></ol>');
   users.forEach(function(user) {
     ol.append(jQuery('<li></li>').text(user));
   });
@@ -41,9 +48,9 @@ socket.on('updateUserList', function(users) {
 });
 
 socket.on('newMessage',function(message) {
-  var formattedTime = moment(message.createdAt).format('h:mm a');
-  var template = jQuery('#message-template').html();
-  var html = Mustache.render(template,{
+  const formattedTime = moment(message.createdAt).format('h:mm a');
+  const template = jQuery('#message-template').html();
+  const html = Mustache.render(template, {
     text: message.text,
     from: message.from,
     createdAt: formattedTime
@@ -53,9 +60,9 @@ socket.on('newMessage',function(message) {
 });
 
 socket.on('newLocationMessage', function(message) {
-  var formattedTime = moment(message.createdAt).format('h:mm a');
-  var template = jQuery('#location-message-template').html();
-  var html = Mustache.render(template,{
+  const formattedTime = moment(message.createdAt).format('h:mm a');
+  const template = jQuery('#location-message-template').html();
+  const html = Mustache.render(template,{
     url: message.url,
     from: message.from,
     createdAt: formattedTime
@@ -65,7 +72,7 @@ socket.on('newLocationMessage', function(message) {
 });
 jQuery('#message-form').on('submit', function (e) {
   e.preventDefault();
-  var messageTextBox = jQuery('[name=message]');
+  const messageTextBox = jQuery('[name=message]');
   socket.emit('createMessage', {
     from: 'User',
     text: messageTextBox.val()
@@ -74,7 +81,7 @@ jQuery('#message-form').on('submit', function (e) {
   });
 });
 
-var locationButton = jQuery('#send-location');
+const locationButton = jQuery('#send-location');
 locationButton.on('click', function() {
   if(!navigator.geolocation) {
     return alert('geolocation not supported by your browser.');
