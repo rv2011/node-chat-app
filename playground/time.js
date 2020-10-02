@@ -6,5 +6,5 @@
 const moment = require('moment');
 
 
-var date = moment();
+const date = moment();
 console.log(date.format('h:mm a'));
